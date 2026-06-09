@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lynn Musik</title>
+
+<style>
+
+body{
+font-family:Arial,sans-serif;
+background:#121212;
+color:white;
+padding:20px;
+text-align:center;
+}
+
+h1{
+color:#1DB954;
+}
+
+input{
+width:70%;
+padding:12px;
+border:none;
+border-radius:10px;
+font-size:16px;
+}
+
+button{
+padding:12px 20px;
+background:#1DB954;
+color:white;
+border:none;
+border-radius:10px;
+cursor:pointer;
+margin-left:5px;
+}
+
+.card{
+background:#1e1e1e;
+padding:15px;
+margin-top:15px;
+border-radius:10px;
+}
+
+.card img{
+width:120px;
+border-radius:10px;
+}
+
+audio{
+width:100%;
+margin-top:10px;
+}
+
+.youtube{
+display:inline-block;
+margin-top:10px;
+padding:10px 15px;
+background:red;
+color:white;
+text-decoration:none;
+border-radius:8px;
+}
+
+</style>
+</head>
+<body>
+
+<h1>🎵 Lynn Musik</h1>
+
+<input
+id="search"
+placeholder="Cari lagu atau artis"
+onkeypress="if(event.key==='Enter') cari()">
+
+<button onclick="cari()">
+Cari
+</button>
+
+<div id="hasil"></div>
+
+<script>
+
+async function cari(){
+
+const keyword =
+document.getElementById("search").value;
+
+if(!keyword) return;
+
+const response =
+await fetch(
+`https://itunes.apple.com/search?term=${encodeURIComponent(keyword)}&entity=song&limit=10`
+);
+
+const data =
+await response.json();
+
+let html="";
+
+data.results.forEach(song=>{
+
+const yt =
+`https://www.youtube.com/results?search_query=${encodeURIComponent(song.trackName + " " + song.artistName)}`;
+
+html += `
+<div class="card">
+
+<img src="${song.artworkUrl100}">
+
+<h3>${song.trackName}</h3>
+
+<p>${song.artistName}</p>
+
+<audio controls>
+<source src="${song.previewUrl}">
+</audio>
+
+<br>
+
+<a
+class="youtube"
+href="${yt}"
+target="_blank">
+📺 Buka di YouTube
+</a>
+
+</div>
+`;
+
+});
+
+document.getElementById("hasil").innerHTML =
+html;
+
+}
+
+</script>
+
+</body>
+</html>
